@@ -1,0 +1,20 @@
+{
+  "v8path": "C:\\Program Files\\1cv8\\8.3.27.1786\\bin",
+  "databases": [
+    {
+      "id": "test",
+      "name": "Тестовая",
+      "type": "server",
+      "server": "<сервер>",
+      "ref": "<имя базы>",
+      "user": "",
+      "password": "",
+      "aliases": ["test", "тест", "тестовая"],
+      "configSrc": "src\\cf",
+      "extensions": [
+        { "name": "<ИмяРасширения>", "src": "src\\cfe\\<ИмяРасширения>" }
+      ]
+    }
+  ],
+  "default": "test"
+}

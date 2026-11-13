@@ -1,0 +1,7 @@
+.env
+session.md
+.v8-project.json
+build/
+oscript_modules/
+*.log
+mcp-server.log*

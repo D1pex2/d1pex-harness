@@ -1,0 +1,11 @@
+/session.md
+__pycache__/
+*.py[cod]
+.env
+.env.*
+auth.json
+credentials.json
+*.log
+*.sqlite
+*.sqlite3
+*.dt

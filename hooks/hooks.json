@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"<HOME>/.agents/hooks/one-c-rules.js\" startup",
+            "statusMessage": "Правила проекта 1С",
+            "timeout": 10,
+            "additionalContextLimit": 10000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"<HOME>/.agents/hooks/one-c-rules.js\" pre",
+            "timeout": 10,
+            "additionalContextLimit": 10000
+          }
+        ]
+      }
+    ]
+  }
+}
