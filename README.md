@@ -1,8 +1,9 @@
 # d1pex-harness
 
-### Мои правила и навыки для Codex и Claude Code
+### Мои правила и навыки для Codex, Antigravity и Claude Code
 
 [![Codex](https://img.shields.io/badge/Codex-primary-111827)](https://github.com/openai/codex)
+[![Antigravity](https://img.shields.io/badge/Antigravity-supported-4285F4)](https://antigravity.google/docs/getting-started)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-compatible_skills-D97757)](https://code.claude.com/docs/en/overview)
 [![1C](https://img.shields.io/badge/1C-development-F7D44C)](skills/1c-development-rules/SKILL.md)
 
@@ -32,15 +33,15 @@ git -c core.longpaths=true clone https://github.com/D1pex2/d1pex-harness.git
 cd d1pex-harness
 ```
 
-Дальше следуйте [INSTALL.md](INSTALL.md): агент проверит зависимости на целевом ПК, установит выбранные внешние наборы, перенесет локальные файлы и проверит результат. Для Codex и Claude Code отличаются каталоги правил, навыков и регистрация хуков.
+Дальше следуйте [INSTALL.md](INSTALL.md): агент проверит зависимости на целевом ПК, установит выбранные внешние наборы, перенесет локальные файлы и проверит результат. Для Codex, Antigravity и Claude Code отличаются каталоги правил, навыков и регистрация хуков.
 
 ## Как устроено
 
 ```text
 d1pex-harness/
 |-- AGENTS.md        Мои правила без персональных путей
-|-- skills/          26 локальных навыков с нужными ресурсами
-|-- hooks/           Подключение правил 1С для Codex
+|-- skills/          27 локальных навыков с нужными ресурсами
+|-- hooks/           Подключение правил 1С для Codex и Antigravity
 |-- rules/           Протокол самопроверки
 |-- SOURCES.md       Чужие навыки, плагины и MCP: ссылки и назначение
 |-- INSTALL.md       Инструкция установки для агента
@@ -62,19 +63,27 @@ d1pex-harness/
 | Обработки и расширения | [полный цикл EPF](skills/1c-epf-full-cycle/SKILL.md), [полный цикл CFE](skills/1c-cfe-full-cycle/SKILL.md) |
 | Хранилище и поддержка | [1c-storage-ops](skills/1c-storage-ops/SKILL.md), [1c-support-state](skills/1c-support-state/SKILL.md) |
 | Проверка интерфейса | [веб-сессия 1С](skills/1c-web-session/SKILL.md), [шаги Vanessa](skills/1c-vanessa-steps/SKILL.md) |
-| Настройка проектов | [init-1c-repo](skills/init-1c-repo/SKILL.md), [setup-1c-workspace](skills/setup-1c-workspace/SKILL.md), [setup-codex-env](skills/setup-codex-env/SKILL.md) |
+| Настройка проектов | [init-1c-repo](skills/init-1c-repo/SKILL.md), [setup-1c-workspace](skills/setup-1c-workspace/SKILL.md), [setup-codex-env](skills/setup-codex-env/SKILL.md), [setup-antigravity-env](skills/setup-antigravity-env/SKILL.md) |
 | Дополнения | [superpowers-extras](skills/superpowers-extras/SKILL.md), [Helium](skills/helium-browser/SKILL.md), [Open WebUI](skills/openwebui-admin-via-browser/SKILL.md) |
 
 Полный состав виден в [skills/](skills). Перед использованием читайте SKILL.md: отдельным навыкам нужны PowerShell, Python, платформа 1С или сторонний набор 1C Skills.
 
 ## Хуки
 
-[one-c-rules.js](hooks/one-c-rules.js) 1.0.2 и [one-c-detector.js](hooks/one-c-detector.js) работают самостоятельно.
+Общий детектор [one-c-detector.js](hooks/one-c-detector.js) 1.1.0 работает самостоятельно и распознает проекты, файлы и MCP 1С для Codex и Antigravity.
+
+Для Codex ([one-c-rules.js](hooks/one-c-rules.js) 1.0.2, шаблон [hooks.json](hooks/hooks.json)):
 
 - `SessionStart`: доставить правила для проекта 1С при старте.
 - `PreToolUse`: распознать работу с 1С и при необходимости добавить полный текст правил.
 
-В обычном проекте хук молчит. Одинаковые правила доставляются один раз на сессию, после нового старта или изменения текста доставляются снова. При `EVENTLOG_AUTORUN` хук отключен. Состояние доставки создается локально и в репозиторий не входит.
+Для Antigravity ([one-c-rules-antigravity.js](hooks/one-c-rules-antigravity.js) 1.0.0, шаблон [hooks.antigravity.json](hooks/hooks.antigravity.json)):
+
+- `SessionStart`: доставить правила для проекта 1С при старте через `injectSteps`.
+- `PreInvocation`: распознать работу с 1С и при необходимости добавить полный текст правил перед ходом модели.
+- `PostToolUse`: read-only фиксация активности 1С (по файлам `.bsl`/`.v8-project.json` и MCP 1С) без влияния на разрешения инструментов, чтобы следующий `PreInvocation` сразу подключил правила.
+
+В обычном проекте хуки молчат. Одинаковые правила доставляются один раз на сессию, после нового старта или изменения текста доставляются снова. При `EVENTLOG_AUTORUN` хуки отключены. Состояние доставки создается локально и в репозиторий не входит.
 
 Наблюдатель и проверки Stop не используются. Тестирование результата и обновление session.md задаются правилами и навыками.
 
@@ -86,9 +95,9 @@ d1pex-harness/
 
 ## Переносимость
 
-Набор синхронизирован с моим окружением на 13.11.2026. Персональные пути и привязки к конкретной установке убраны, клиентские подключения и секреты не включены. Изменения на машине не попадают сюда автоматически.
+Набор синхронизирован с моим окружением на 21.11.2026. Персональные пути и привязки к конкретной установке убраны, клиентские подключения и секреты не включены. Изменения на машине не попадают сюда автоматически.
 
-В Codex используются AGENTS.md и локальные хуки. Для Claude Code подходящие правила переносятся в CLAUDE.md, навыки проверяются на совместимость. Готовой адаптации этих хуков для Claude Code нет.
+В Codex используются `AGENTS.md`, `~/.agents/skills/` и хук `one-c-rules.js`. В Antigravity используются `~/.gemini/config/AGENTS.md` (или проектный `AGENTS.md`), `~/.gemini/config/skills/` (или `<проект>/.agents/skills/`), `~/.gemini/config/mcp_config.json` и хук `one-c-rules-antigravity.js`. Для Claude Code подходящие правила переносятся в `CLAUDE.md`, навыки проверяются на совместимость; готовой адаптации этих хуков для Claude Code нет.
 
 История main начинается с текущего очищенного снимка. Старые копии по SHA, кэшам, PR или форкам GitHub могут оставаться доступными.
 

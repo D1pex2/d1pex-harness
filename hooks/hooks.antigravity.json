@@ -1,0 +1,30 @@
+{
+  "one-c-rules": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node ./hooks/one-c-rules-antigravity.js startup",
+        "timeout": 10
+      }
+    ],
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "node ./hooks/one-c-rules-antigravity.js pre",
+        "timeout": 10
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/one-c-rules-antigravity.js post",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

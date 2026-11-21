@@ -4,13 +4,13 @@
 
 ## 1. Определи состав
 
-Проверь агент, ОС, область установки и уже установленные компоненты. Если неясно, нужен Codex или Claude Code и личная или проектная установка, уточни это одним вопросом.
+Проверь агент, ОС, область установки и уже установленные компоненты. Если неясно, нужен Codex, Antigravity или Claude Code и личная или проектная установка, уточни это одним вопросом.
 
 Прочитай [README.md](README.md), [AGENTS.md](AGENTS.md) и [SOURCES.md](SOURCES.md). Покажи состав изменений. Сохрани резервные копии заменяемых файлов вне репозитория. Выполняй уже согласованный объем без повторных разрешений.
 
 На целевом ПК проверь зависимости:
 
-- Установленный и авторизованный [Codex](https://developers.openai.com/codex/quickstart) или [Claude Code](https://code.claude.com/docs/en/quickstart).
+- Установленный и авторизованный [Codex](https://developers.openai.com/codex/quickstart), [Antigravity](https://antigravity.google/docs/getting-started) или [Claude Code](https://code.claude.com/docs/en/quickstart).
 - Git для получения репозиториев, Node.js для хуков, Python 3.12+ для Python-скриптов навыков.
 - Для PowerShell-навыков 1С - Windows и подходящий PowerShell. Для shell-скриптов - Bash, например из Git for Windows.
 - Платформа 1С, OneScript, браузерные утилиты и MCP нужны только соответствующим операциям. Требования бери из выбранных SKILL.md и README проектов.
@@ -26,10 +26,10 @@ cd d1pex-harness
 
 Открой выбранные источники из [SOURCES.md](SOURCES.md) и используй актуальную нативную инструкцию для нужного агента.
 
-- Superpowers: в Codex установи через Plugins или `/plugins`. В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream.
-- 1C Skills: выбери вариант для Codex или Claude Code, PowerShell или Python по README проекта. Не включай несколько копий одного набора.
-- Отдельные навыки: используй штатный способ установки агента, в Codex при необходимости встроенный skill-installer.
-- MCP: установи сервер по README и настрой его в клиенте агента. Пути к программам и параметры определяй на машине пользователя.
+- Superpowers: в Codex установи через Plugins или `/plugins`. В Antigravity скопируй навыки в `~/.gemini/config/skills/` или установи совместимый плагин через `agy plugin install`. В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream.
+- 1C Skills: выбери вариант для Codex, Antigravity или Claude Code, PowerShell или Python по README проекта. Не включай несколько копий одного набора.
+- Отдельные навыки и плагины: используй штатный способ установки агента - в Codex при необходимости встроенный skill-installer, в Antigravity `agy plugin install <url-или-имя>` (или `Customizations > Marketplace`).
+- MCP: установи сервер по README и настрой его в клиенте агента (для Codex - `~/.codex/config.toml`, для Antigravity - `~/.gemini/config/mcp_config.json`, транспорты `stdio` и Streamable HTTP `url`). Пути к программам и параметры определяй на машине пользователя.
 
 Не копируй кэш плагинов. Приложения аккаунта устанавливаются и авторизуются отдельно. Конфигурацию клиентских баз, токены и пароли этот репозиторий не содержит.
 
@@ -40,23 +40,28 @@ cd d1pex-harness
 | Агент | Личная установка | Установка в проект |
 | --- | --- | --- |
 | Codex | `~/.agents/skills/` | `<проект>/.agents/skills/` |
+| Antigravity | `~/.gemini/config/skills/` | `<проект>/.agents/skills/` |
 | Claude Code | `~/.claude/skills/` | `<проект>/.claude/skills/` |
 
-Источники: [навыки Codex](https://learn.chatgpt.com/docs/build-skills), [навыки Claude Code](https://code.claude.com/docs/en/skills).
+Источники: [навыки Codex](https://learn.chatgpt.com/docs/build-skills), [навыки Antigravity](https://antigravity.google/docs/skills), [навыки Claude Code](https://code.claude.com/docs/en/skills).
 
-Существующие навыки не затирай вслепую: сравни версии, ресурсы и локальные изменения. Один навык устанавливай одним способом.
+Существующие навыки не затирай вслепую: сравни версии, ресурсы и локальные изменения. Один навык устанавливай одним способом (в Antigravity не дублируй один и тот же навык в `~/.gemini/config/skills/` и внутри плагина в `~/.gemini/config/plugins/`).
 
-Для Claude Code проверь названия инструментов, команды и ссылки на другие навыки. Локальный набор ориентирован прежде всего на Codex; наличие SKILL.md не доказывает совместимость всех его скриптов с другой платформой.
+Для Claude Code проверь названия инструментов, команды и ссылки на другие навыки. Локальный набор ориентирован прежде всего на Codex и Antigravity; наличие SKILL.md не доказывает совместимость всех его скриптов с другой платформой.
 
 ## 4. Перенеси правила
 
 Для Codex объедини содержимое [AGENTS.md](AGENTS.md) с действующим личным или проектным AGENTS.md. На новом ПК без такого файла скопируй его целиком. Для ПК коллеги сохрани его личные предпочтения и уточни только конфликтующие правила. [rules/quality-check.md](rules/quality-check.md) размести в каталоге rules рядом с этим AGENTS.md либо исправь относительную ссылку на фактическое расположение.
 
+Для Antigravity объедини содержимое [AGENTS.md](AGENTS.md) с личным `~/.gemini/config/AGENTS.md` (или проектным `<проект>/AGENTS.md`). Standalone `AGENTS.md` работает без YAML frontmatter и активен всегда. [rules/quality-check.md](rules/quality-check.md) размести в `~/.gemini/config/rules/quality-check.md` (рядом с `AGENTS.md` для относительной ссылки) либо исправь ссылку на фактическое расположение; учти, что файлы в `rules/*.md` подгружаются Antigravity автоматически только при наличии YAML frontmatter `trigger:`, но по прямой ссылке из `AGENTS.md` читаются и без него.
+
 Для Claude Code перенеси подходящие правила в личный `~/.claude/CLAUDE.md` или проектный CLAUDE.md. Протокол качества размести рядом в rules или исправь ссылку. Сохрани предпочтения пользователя и действующие правила его проектов.
 
-Не заменяй целиком рабочие config.toml, settings.json, AGENTS.md или CLAUDE.md готовой копией. Не переноси пути, порты и параметры служб с чужой машины.
+Не заменяй целиком рабочие `config.toml`, `settings.json`, `mcp_config.json`, `config.json`, `AGENTS.md` или `CLAUDE.md` готовой копией. Не переноси пути, порты, адреса баз и параметры служб с чужой машины.
 
-## 5. Подключи хуки Codex
+## 5. Подключи хуки
+
+### Codex
 
 Для этой версии хуков нужен локальный навык 1c-development-rules в `~/.agents/skills/`. Если выбран другой каталог навыков, укажи его в one-c-rules.js перед подключением.
 
@@ -73,16 +78,33 @@ cd d1pex-harness
 
 Если обновляется прежний d1pex-harness, убери только его старые регистрации session-start.js, pre-tool-guard.js, post-tool-use.js и stop-check.js. Чужие обработчики сохраняй. Проверь также inline-хуки в config.toml, чтобы не получить дубли.
 
-Источник: [официальная регистрация хуков Codex](https://learn.chatgpt.com/docs/config-file/config-advanced#hooks). Для Claude Code используется [другой протокол хуков](https://code.claude.com/docs/en/hooks); эти файлы не объявляются готовой адаптацией для него.
+Источник: [официальная регистрация хуков Codex](https://learn.chatgpt.com/docs/config-file/config-advanced#hooks).
+
+### Antigravity
+
+Для хуков Antigravity нужен локальный навык `1c-development-rules` в `~/.gemini/config/skills/` (или в `~/.agents/skills/`, либо внутри установленного плагина в `~/.gemini/config/plugins/`). Хук находит его автоматически; при нестандартном пути можно задать переменную окружения `ONE_C_RULES_SKILL`.
+
+1. Скопируй [one-c-rules-antigravity.js](hooks/one-c-rules-antigravity.js) и [one-c-detector.js](hooks/one-c-detector.js) в `~/.gemini/config/hooks/` (для проектной установки - в `<проект>/.agents/hooks/`). Файлы должны лежать рядом.
+2. Объедини блок `"one-c-rules"` из [hooks/hooks.antigravity.json](hooks/hooks.antigravity.json) с `~/.gemini/config/hooks.json` (или `<проект>/.agents/hooks.json`). В Antigravity рабочий каталог команды хука совпадает с каталогом `hooks.json`, поэтому относительный путь `./hooks/one-c-rules-antigravity.js` работает без подстановки `<HOME>`. Не регистрируй одинаковые обработчики повторно.
+
+| Событие | Аргумент one-c-rules-antigravity.js | Назначение |
+| --- | --- | --- |
+| SessionStart | `startup` | Доставить правила 1С при старте сессии в проекте 1С через `injectSteps` |
+| PreInvocation | `pre` | Доставить правила 1С перед ходом модели, если признак 1С активен |
+| PostToolUse (`matcher: "*"`) | `post` | Read-only фиксация активности 1С по файлам и MCP без влияния на разрешения |
+
+Детектор читает `~/.gemini/config/mcp_config.json` и `mcp_config.json` установленных плагинов (учитывает `ANTIGRAVITY_CONFIG_DIR`). Состояние доставки создается в `one-c-runtime-antigravity/` рядом с хуком (или в `PLUGIN_DATA` внутри плагина); переносить его между машинами не нужно.
+
+Источник: [хуки Antigravity](https://antigravity.google/docs/hooks). Для Claude Code используется [другой протокол хуков](https://code.claude.com/docs/en/hooks); эти файлы не объявляются готовой адаптацией для него.
 
 ## 6. Проверь результат
 
 - Открой новый чат. Проверь наличие навыков и чтение их ресурсов.
-- Проверь фактическую активность плагинов и доступность выбранных MCP безопасными запросами без записи в клиентские системы.
-- В Codex проверь обычный проект: правила 1С не должны добавляться.
-- На отдельном тестовом проекте с .v8-project.json или при чтении тестового .bsl проверь доставку полного текста правил 1С. База для этого не требуется.
+- Проверь фактическую активность плагинов (`agy plugin list --json` для Antigravity) и доступность выбранных MCP безопасными запросами без записи в клиентские системы.
+- В Codex и Antigravity проверь обычный проект: правила 1С не должны добавляться.
+- На отдельном тестовом проекте с `.v8-project.json` или при чтении тестового `.bsl` проверь доставку полного текста правил 1С. База для этого не требуется.
 - Проверь отсутствие повторной доставки одинаковых правил в одной сессии и повтор после нового старта.
-- Убедись, что старые настройки сохранены и в регистрации нет незамененного `<HOME>`.
+- Убедись, что старые настройки сохранены, в регистрации Codex нет незамененного `<HOME>`, а `hooks.json` и `mcp_config.json` валидны по JSON.
 
 Установка внешних компонентов и проверка пользовательских сценариев 1С - разные действия. Базы проверяй только в согласованном объеме. Если запуск недоступен, перечисли, что проверено статически и что не запускалось.
 
