@@ -12,6 +12,7 @@
 | [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) | Граф связей проекта и исследование кода. Устанавливаются CLI и навык по README. |
 | [tt-a1i/archify](https://github.com/tt-a1i/archify) | Архитектурные и процессные диаграммы. |
 | [tenfoldmarc/llm-council-skill](https://github.com/tenfoldmarc/llm-council-skill) | Совет моделей для разбора вопросов; нужна отдельная настройка провайдеров. |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | Проектирование, верстка и ревью UI/UX: стили, палитры, типографика, графики и дизайн-системы. Устанавливается через CLI (`ui-ux-pro-max-cli`), маркетплейс Claude Code или в Antigravity командой `agy plugin install`. |
 | [openai/skills](https://github.com/openai/skills) | Публичные навыки и инструменты установки навыков для Codex. Состав может отличаться от встроенного набора приложения. |
 
 ## MCP
