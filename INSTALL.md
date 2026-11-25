@@ -26,7 +26,7 @@ cd d1pex-harness
 
 Открой выбранные источники из [SOURCES.md](SOURCES.md) и используй актуальную нативную инструкцию для нужного агента.
 
-- Superpowers: в Codex установи через Plugins или `/plugins`. В Antigravity скопируй навыки в `~/.gemini/config/skills/` или установи совместимый плагин через `agy plugin install`. В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream.
+- Superpowers: в Codex установи через Plugins или `/plugins`. В Antigravity не ставь весь набор целиком (оркестрация, worktree и планы уже встроены в агент); при необходимости скопируй в `~/.gemini/config/skills/` только методологические навыки (`brainstorming`, `grilling`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review`). В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream.
 - 1C Skills: выбери вариант для Codex, Antigravity или Claude Code, PowerShell или Python по README проекта. Не включай несколько копий одного набора.
 - Отдельные навыки и плагины: используй штатный способ установки агента - в Codex при необходимости встроенный skill-installer, в Antigravity `agy plugin install <url-или-имя>` (или `Customizations > Marketplace`).
 - MCP: установи сервер по README и настрой его в клиенте агента (для Codex - `~/.codex/config.toml`, для Antigravity - `~/.gemini/config/mcp_config.json`, транспорты `stdio` и Streamable HTTP `url`). Пути к программам и параметры определяй на машине пользователя.
@@ -53,7 +53,7 @@ cd d1pex-harness
 
 Для Codex объедини содержимое [AGENTS.md](AGENTS.md) с действующим личным или проектным AGENTS.md. На новом ПК без такого файла скопируй его целиком. Для ПК коллеги сохрани его личные предпочтения и уточни только конфликтующие правила. [rules/quality-check.md](rules/quality-check.md) размести в каталоге rules рядом с этим AGENTS.md либо исправь относительную ссылку на фактическое расположение.
 
-Для Antigravity объедини содержимое [AGENTS.md](AGENTS.md) с личным `~/.gemini/config/AGENTS.md` (или проектным `<проект>/AGENTS.md`). Standalone `AGENTS.md` работает без YAML frontmatter и активен всегда. [rules/quality-check.md](rules/quality-check.md) размести в `~/.gemini/config/rules/quality-check.md` (рядом с `AGENTS.md` для относительной ссылки) либо исправь ссылку на фактическое расположение; учти, что файлы в `rules/*.md` подгружаются Antigravity автоматически только при наличии YAML frontmatter `trigger:`, но по прямой ссылке из `AGENTS.md` читаются и без него.
+Для Antigravity используй адаптированный [antigravity.md](antigravity.md) (в нем уже убраны разделы Codex про `Astra`, `EVENTLOG_AUTORUN` и `superpowers-extras`, а протокол качества встроен внутрь) и объедини его с личным `~/.gemini/config/AGENTS.md` (или проектным `<проект>/AGENTS.md`). Standalone `AGENTS.md` работает без YAML frontmatter и активен всегда; файлы в `rules/*.md` подгружаются Antigravity автоматически только при наличии YAML frontmatter `trigger:`.
 
 Для Claude Code перенеси подходящие правила в личный `~/.claude/CLAUDE.md` или проектный CLAUDE.md. Протокол качества размести рядом в rules или исправь ссылку. Сохрани предпочтения пользователя и действующие правила его проектов.
 

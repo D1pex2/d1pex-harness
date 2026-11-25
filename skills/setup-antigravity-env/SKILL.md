@@ -15,7 +15,8 @@ disable-model-invocation: true
 
 - Предпочитай один источник каждого набора. Глобальные навыки Antigravity лежат в `~/.gemini/config/skills/`, проектные - в `<проект>/.agents/skills/`, плагины - в `~/.gemini/config/plugins/`.
 - Не создавай дубли одного навыка одновременно в `~/.gemini/config/skills/` и внутри плагина в `~/.gemini/config/plugins/<имя>/skills/`. При смене источника сначала сравни версии и локальные правки.
-- Сторонние наборы с манифестом плагина (например `ui-ux-pro-max-skill`) ставь штатно через `agy plugin install <url-или-имя>` или через `Customizations > Marketplace`.
+- Сторонние наборы с манифестом плагина ставь штатно через `agy plugin install <url-или-имя>` или через `Customizations > Marketplace`. Не держи постоянно включенными тяжелые плагины, если они не нужны в текущих задачах (например, `ui-ux-pro-max` для UI или `chrome-devtools-plugin`, если уже используется встроенный `browser` или `playwright` MCP).
+- Не переноси в Antigravity навыки-обертки и оркестрацию из Codex/Claude Code, дублирующие встроенные механизмы (`invoke_subagent`, `swarm`, `run_workflow`, `update_steps`, `/grill-me`): `using-superpowers`, `superpowers-extras`, `diagnosing-superpowers`, `using-git-worktrees`, `dispatching-parallel-agents`, `subagent-driven-development`, `writing-plans`, `executing-plans`, `finishing-a-development-branch`, `grill-me`, `grill-with-docs`, `task-observer`, `setup-codex-env`. Из Superpowers имеет смысл переносить только методологию (`brainstorming`, `grilling`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review`).
 - Не редактируй `~/.gemini/config/config.json` вручную: включение, отключение и удаление плагинов выполняются через `agy plugin enable/disable/uninstall` или интерфейс `Customizations > Installed`.
 - Встроенные плагины Antigravity не удаляются; при необходимости их можно только отключить в настройках.
 
@@ -31,7 +32,7 @@ Antigravity поддерживает транспорты `stdio` (`command`, `a
 
 ## Правила и хуки
 
-Сохраняй текущий `~/.gemini/config/AGENTS.md` (или проектный `AGENTS.md`). Не заменяй его целиком чужой копией; изменения правил показывай как точечные различия. Файлы внутри `~/.gemini/config/rules/*.md` и `.agents/rules/*.md` загружаются Antigravity только при наличии YAML frontmatter с полем `trigger:`; standalone `AGENTS.md` работает без frontmatter.
+Для Antigravity используй адаптированный файл [antigravity.md](../../antigravity.md) (без разделов Codex про `Astra`, `EVENTLOG_AUTORUN` и `superpowers-extras`, с вшитым контролем качества). Сохраняй текущий `~/.gemini/config/AGENTS.md` (или проектный `AGENTS.md`): не заменяй его целиком чужой копией, изменения правил показывай как точечные различия. Файлы внутри `~/.gemini/config/rules/*.md` и `.agents/rules/*.md` загружаются Antigravity только при наличии YAML frontmatter с полем `trigger:`; standalone `AGENTS.md` работает без frontmatter.
 
 Пользовательские хуки `one-c-rules-antigravity.js` и `one-c-detector.js` подключают правила 1С по признакам проекта, файлам и MCP 1С без списка клиентов. В `hooks.json` регистрируются `SessionStart`, `PreInvocation` и read-only `PostToolUse`. Рабочий каталог команды хука в Antigravity совпадает с каталогом `hooks.json`, поэтому относительный путь `./hooks/one-c-rules-antigravity.js` работает переносимо. При переносе окружения проверь хуки на временном проекте.
 
