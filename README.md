@@ -70,12 +70,18 @@ d1pex-harness/
 
 ## Хуки
 
-Общий детектор [one-c-detector.js](hooks/one-c-detector.js) 1.1.0 работает самостоятельно и распознает проекты, файлы и MCP 1С для Codex и Antigravity.
+Общий детектор [one-c-detector.js](hooks/one-c-detector.js) 1.1.0 работает самостоятельно и распознает проекты, файлы и MCP 1С для Codex, Antigravity и Claude Code.
 
-Для Codex ([one-c-rules.js](hooks/one-c-rules.js) 1.0.2, шаблон [hooks.json](hooks/hooks.json)):
+Для Codex ([one-c-rules.js](hooks/one-c-rules.js) 1.1.0, шаблон [hooks.json](hooks/hooks.json)):
 
 - `SessionStart`: доставить правила для проекта 1С при старте.
 - `PreToolUse`: распознать работу с 1С и при необходимости добавить полный текст правил.
+
+Для Claude Code (тот же [one-c-rules.js](hooks/one-c-rules.js), шаблон [hooks.claude.json](hooks/hooks.claude.json)):
+
+- `SessionStart`: доставить правила для проекта 1С при старте.
+- `UserPromptSubmit`: один раз на запрос распознать 1С по рабочей папке и путям в тексте запроса.
+- `PreToolUse` только для правок файлов и MCP BSL Context, Code Index и BslEdit: правила гарантированно приходят до правки BSL вне проекта 1С. Чтение, поиск и команды оболочки хук не запускают, это экономит около 0.13 с на каждый такой вызов.
 
 Для Antigravity ([one-c-rules-antigravity.js](hooks/one-c-rules-antigravity.js) 1.0.0, шаблон [hooks.antigravity.json](hooks/hooks.antigravity.json)):
 
@@ -97,7 +103,7 @@ d1pex-harness/
 
 Набор синхронизирован с моим окружением на 21.11.2026. Персональные пути и привязки к конкретной установке убраны, клиентские подключения и секреты не включены. Изменения на машине не попадают сюда автоматически.
 
-В Codex используются `AGENTS.md`, `~/.agents/skills/` и хук `one-c-rules.js`. В Antigravity используются `~/.gemini/config/AGENTS.md` (или проектный `AGENTS.md`), `~/.gemini/config/skills/` (или `<проект>/.agents/skills/`), `~/.gemini/config/mcp_config.json` и хук `one-c-rules-antigravity.js`. Для Claude Code подходящие правила переносятся в `CLAUDE.md`, навыки проверяются на совместимость; готовой адаптации этих хуков для Claude Code нет.
+В Codex используются `AGENTS.md`, `~/.agents/skills/` и хук `one-c-rules.js`. В Antigravity используются `~/.gemini/config/AGENTS.md` (или проектный `AGENTS.md`), `~/.gemini/config/skills/` (или `<проект>/.agents/skills/`), `~/.gemini/config/mcp_config.json` и хук `one-c-rules-antigravity.js`. В Claude Code используются `~/.claude/CLAUDE.md` со ссылкой на общий AGENTS.md, `~/.claude/skills/` и хук `one-c-rules.js` с шаблоном `hooks.claude.json`.
 
 История main начинается с текущего очищенного снимка. Старые копии по SHA, кэшам, PR или форкам GitHub могут оставаться доступными.
 

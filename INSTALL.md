@@ -26,10 +26,10 @@ cd d1pex-harness
 
 Открой выбранные источники из [SOURCES.md](SOURCES.md) и используй актуальную нативную инструкцию для нужного агента.
 
-- Superpowers: в Codex установи через Plugins или `/plugins`. В Antigravity не ставь весь набор целиком (оркестрация, worktree и планы уже встроены в агент); при необходимости скопируй в `~/.gemini/config/skills/` только методологические навыки (`brainstorming`, `grilling`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review`). В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream.
+- Superpowers: в Codex установи через Plugins или `/plugins`. В Antigravity не ставь весь набор целиком (оркестрация, worktree и планы уже встроены в агент); при необходимости скопируй в `~/.gemini/config/skills/` только методологические навыки (`brainstorming`, `grilling`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review`). В Claude Code используй `/plugin install superpowers@claude-plugins-official`, как описывает upstream, либо подключи навыки по одному; `using-superpowers` не подключай: его требование вызывать навык до любого ответа противоречит правилу предлагать навык и ждать ответа.
 - 1C Skills: выбери вариант для Codex, Antigravity или Claude Code, PowerShell или Python по README проекта. Не включай несколько копий одного набора. В Antigravity при установке `1c-skills` вместе с `d1pex-harness` не переноси `1c-storage-ops` (используй `db-repo` из `1c-skills`) и `1c-web-session` (используй `web-*`), а в `1c-skills` убери в `skills_disabled` дубли `support-edit`, `epf-bsp-add-command` и `epf-bsp-init` (остаются `1c-support-state`, `1c-bsp-command`, `1c-bsp-registration`).
 - Отдельные навыки и плагины: используй штатный способ установки агента - в Codex при необходимости встроенный skill-installer, в Antigravity `agy plugin install <url-или-имя>` (или `Customizations > Marketplace`).
-- MCP: установи сервер по README и настрой его в клиенте агента (для Codex - `~/.codex/config.toml`, для Antigravity - `~/.gemini/config/mcp_config.json`, транспорты `stdio` и Streamable HTTP `url`). Пути к программам и параметры определяй на машине пользователя.
+- MCP: установи сервер по README и настрой его в клиенте агента (для Codex - `~/.codex/config.toml`, для Antigravity - `~/.gemini/config/mcp_config.json`, для Claude Code - `claude mcp add` с областью user, транспорты `stdio` и Streamable HTTP `url`). Пути к программам и параметры определяй на машине пользователя.
 
 Не копируй кэш плагинов. Приложения аккаунта устанавливаются и авторизуются отдельно. Конфигурацию клиентских баз, токены и пароли этот репозиторий не содержит.
 
@@ -95,7 +95,26 @@ cd d1pex-harness
 
 Детектор читает `~/.gemini/config/mcp_config.json` и `mcp_config.json` установленных плагинов (учитывает `ANTIGRAVITY_CONFIG_DIR`). Состояние доставки создается в `one-c-runtime-antigravity/` рядом с хуком (или в `PLUGIN_DATA` внутри плагина); переносить его между машинами не нужно.
 
-Источник: [хуки Antigravity](https://antigravity.google/docs/hooks). Для Claude Code используется [другой протокол хуков](https://code.claude.com/docs/en/hooks); эти файлы не объявляются готовой адаптацией для него.
+Источник: [хуки Antigravity](https://antigravity.google/docs/hooks).
+
+### Claude Code
+
+Используется тот же [one-c-rules.js](hooks/one-c-rules.js), что и для Codex, и навык `1c-development-rules` в `~/.agents/skills/`.
+
+1. Скопируй [one-c-rules.js](hooks/one-c-rules.js) и [one-c-detector.js](hooks/one-c-detector.js) в `~/.agents/hooks/`, если их еще нет после настройки Codex.
+2. В [шаблоне hooks.claude.json](hooks/hooks.claude.json) замени `<HOME>` домашним каталогом с прямыми слешами и объедини блок `hooks` с `~/.claude/settings.json`. Не регистрируй одинаковые обработчики повторно.
+
+| Событие | Аргумент one-c-rules.js | Назначение |
+| --- | --- | --- |
+| SessionStart | `startup` | Доставить правила 1С при старте сессии в проекте 1С |
+| UserPromptSubmit | `prompt` | Один раз на запрос распознать 1С по рабочей папке и путям в тексте запроса |
+| PreToolUse (matcher на правки файлов и MCP 1С) | `pre` | Доставить правила до правки BSL вне проекта 1С |
+
+PreToolUse без matcher не ставь: хук будет запускать node на каждое чтение, поиск и команду оболочки. Состояние доставки общее с Codex: `~/.agents/hooks/one-c-runtime/`.
+
+В разрешениях `settings.json` указывай фактические имена инструментов MCP, например `mcp__bsl_context__get_member`, а не `getMember`: несовпадающее правило молча не действует.
+
+Источник: [хуки Claude Code](https://code.claude.com/docs/en/hooks).
 
 ## 6. Проверь результат
 

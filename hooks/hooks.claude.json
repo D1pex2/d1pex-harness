@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"<HOME>/.agents/hooks/one-c-rules.js\" startup",
+            "timeout": 10,
+            "statusMessage": "Правила проекта 1С"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"<HOME>/.agents/hooks/one-c-rules.js\" prompt",
+            "timeout": 10,
+            "statusMessage": "Правила проекта 1С"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|mcp__bsl_context__.*|mcp__code_index__.*|mcp__one_c_form_viewer__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"<HOME>/.agents/hooks/one-c-rules.js\" pre",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

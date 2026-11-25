@@ -1,4 +1,5 @@
-// Автоподключение правил 1С 1.0.2. Наблюдатель и контроль session.md не запускаются.
+// Автоподключение правил 1С 1.1.0. Наблюдатель и контроль session.md не запускаются.
+// События: startup (SessionStart), prompt (UserPromptSubmit, один раз на запрос), pre (PreToolUse).
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
@@ -15,7 +16,9 @@ function run(input, event, runtime = path.join(home, '.agents/hooks/one-c-runtim
   try { state = JSON.parse(fs.readFileSync(stateFile, 'utf8')); } catch {}
   if (event === 'startup') state.emitted = false;
   // Детектор работает независимо от других навыков и не запускает наблюдателей.
-  const active = Boolean(state.active || isOneC(input));
+  // Для запроса детектор смотрит рабочую папку и пути в тексте запроса.
+  const detectorInput = event === 'prompt' ? {...input, tool_input: {prompt: input.prompt || ''}} : input;
+  const active = Boolean(state.active || isOneC(detectorInput));
   let result = {};
   if (active) {
     const skill = path.join(home, '.agents/skills/1c-development-rules/SKILL.md');
@@ -23,7 +26,7 @@ function run(input, event, runtime = path.join(home, '.agents/hooks/one-c-runtim
     const digest = hash(text);
     if (!state.emitted || state.hash !== digest) {
       result = {hookSpecificOutput: {
-        hookEventName: event === 'startup' ? 'SessionStart' : 'PreToolUse',
+        hookEventName: {startup: 'SessionStart', prompt: 'UserPromptSubmit'}[event] || 'PreToolUse',
         additionalContext: `Автоматически подключены правила проекта 1С. Источник: ${skill}. Если сообщение обрезано, прочитай references/rules.md рядом с этим файлом целиком.\n${text}`
       }};
       state = {active: true, emitted: true, hash: digest};
@@ -49,4 +52,4 @@ if (require.main === module) {
     else process.stdout.write(JSON.stringify({systemMessage: message}));
   }
 }
-module.exports = {run, VERSION: '1.0.2'};
+module.exports = {run, VERSION: '1.1.0'};
