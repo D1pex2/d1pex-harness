@@ -91,7 +91,7 @@ d1pex-harness/
 
 Основа процесса - [Superpowers](https://github.com/obra/superpowers). Операции с исходниками и базами 1С - [1C Skills](https://github.com/Nikolay-Shirokov/cc-1c-skills). Разбор планов и предметной области - [Matt Pocock Skills](https://github.com/mattpocock/skills).
 
-Для инструментов использую Playwright MCP, BSL Context, Code Index и BslEdit. Дополнительно - Graphify, Archify и другие навыки по задаче. Все ссылки с пояснениями собраны в [SOURCES.md](SOURCES.md).
+Для инструментов использую Playwright MCP, BSL Context, Code Index и BslEdit. Остальные навыки подключаются по задаче. Все ссылки с пояснениями собраны в [SOURCES.md](SOURCES.md).
 
 ## Переносимость
 
